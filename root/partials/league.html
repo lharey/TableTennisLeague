@@ -1,0 +1,108 @@
+<section id="league">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>League</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <th class="col-lg-4">&nbsp;</th>
+                    <th class="col-lg-1">
+                        P
+                    </th>
+                    <th class="col-lg-1">
+                        W
+                    </th>
+                    <th class="col-lg-1">
+                        D
+                    </th>
+                    <th class="col-lg-1">
+                        L
+                    </th>
+                    <th class="col-lg-1">
+                        F
+                    </th>
+                    <th class="col-lg-1">
+                        A
+                    </th>
+                    <th class="col-lg-1">
+                        PD
+                    </th>
+                    <th class="col-lg-1">
+                        Score
+                    </th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="player in league">
+                        <td class="col-lg-4"><strong>{{player.name}}</strong></td>
+                        <td class="col-lg-1">{{player.played}}</td>
+                        <td class="col-lg-1">{{player.won}}</td>
+                        <td class="col-lg-1">{{player.drawn}}</td>
+                        <td class="col-lg-1">{{player.lost}}</td>
+                        <td class="col-lg-1">{{player.for}}</td>
+                        <td class="col-lg-1">{{player.against}}</td>
+                        <td class="col-lg-1">{{player.points_diff}}</td>
+                        <td class="col-lg-1"><strong>{{player.score}}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<section class="rounds" id="rounds">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Rounds</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 portfolio-item" ng-repeat="number in roundButtons">
+                <a href="#roundModal" class="portfolio-link" ng-click="showRound(number); $event.preventDefault()">
+                    <div class="caption">
+                        <div class="caption-content text-center">
+                            <h1 class="{{(number == current_round) ? 'current' : (number > current_round) ? 'future' : ''}}">{{number}}</h1>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="portfolio-modal modal fade" id="roundModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>Round {{round_number}}</h2>
+                        <hr class="star-primary">
+                        <div class="row">
+                            <table class="table">
+                                <tr ng-repeat="player in round">
+                                    <td class="col-lg-4">{{player.player1}}</td>
+                                    <td class="col-lg-1">{{(player.score1) ? player.score1 : 0}}</td>
+                                    <td class="col-lg-2">V</td>
+                                    <td class="col-lg-1">{{(player.score2) ? player.score2 : 0}}</td>
+                                    <td class="col-lg-4">{{player.player2}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

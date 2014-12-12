@@ -1,0 +1,16 @@
+section.rounds {
+    color: #fff;
+    background: #18bc9c;
+}
+
+section.rounds div.caption-content h1 {
+    color: #fff;
+}
+
+section.rounds div.caption-content h1.current {
+    color: #ee5f5b;;
+}
+
+section.rounds div.caption-content h1.future {
+    color: #c8c8c8;
+}
