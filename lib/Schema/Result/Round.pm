@@ -132,9 +132,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 schedules
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-11 14:09:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JmqFdjmfK+xaaHe/jC0o4w
+Type: has_many
+
+Related object: L<Schema::Result::Schedule>
+
+=cut
+
+__PACKAGE__->has_many(
+  "schedules",
+  "Schema::Result::Schedule",
+  { "foreign.round" => "self.round" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-12 14:09:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2wOal/poryk3G5U/lx7ZdA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

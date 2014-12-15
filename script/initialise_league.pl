@@ -49,14 +49,21 @@ my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 })
                       or die $DBI::errstr;
 
 my $sql = qq (
-    DROP TABLE main.rounds;
+    DROP TABLE main.schedule;
 );
 my $res = eval { $dbh->do($sql); };
+
+$sql = qq (
+    DROP TABLE main.rounds;
+);
+$res = eval { $dbh->do($sql); };
 
 $sql = qq (
     DROP TABLE main.league;
 );
 $res = eval { $dbh->do($sql); };
+
+
 
 $sql = qq (
     CREATE TABLE main.league(
@@ -99,6 +106,23 @@ if($res < 0){
    print "rounds table created\n";
 }
 
+$sql = qq (
+    CREATE TABLE main.schedule(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        round INT NOT NULL,
+        start_date TEXT,
+        end_date TEXT,
+        FOREIGN KEY(round)
+            REFERENCES rounds(round)
+    );
+);
+$res = $dbh->do($sql);
+if($res < 0){
+   print $DBI::errstr;
+} else {
+   print "schedule table created\n";
+}
+
 my @league_table;
 foreach my $player (sort @{$players}) {
     if ($player ne 'Bye') {
@@ -124,14 +148,15 @@ foreach my $player (sort @{$players}) {
 
 my $rounds;
 my $round_num = 0;
-$sql = qq (
-    INSERT INTO main.rounds (round, player1, player2)
-    values (?,?,?);
-);
+
 foreach my $round (@{$league->wholeSchedule}) {
     $round_num++;
     my @games;
     foreach my $game (@{$round}) {
+        $sql = qq (
+            INSERT INTO main.rounds (round, player1, player2)
+            values (?,?,?);
+        );
         if ($game->[0] ne 'Bye' && $game->[1] ne 'Bye') {
             my @bind_vars = ($round_num, $game->[0], $game->[1] );
             $dbh->do(
@@ -151,9 +176,16 @@ foreach my $round (@{$league->wholeSchedule}) {
     }
 
     $rounds->{$round_num} = \@games;
+
+    $dbh->do(
+        qq (
+            INSERT INTO main.schedule (round)
+            values (?);
+        ),
+        undef,
+        $round_num
+    ) or die $dbh->errstr;
 }
-
-
 
 $dbh->disconnect;
 

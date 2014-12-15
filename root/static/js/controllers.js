@@ -5,7 +5,7 @@
 var tabletennisControllers = angular.module('tabletennisControllers', []);
 
 tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
-    $http.get('static/data/games.json').success(function(data) {
+    $http.get('/tabletennis/league').success(function(data) {
         console.log('data',data);
         $scope.league = data.league_table;
         console.log($scope.league);

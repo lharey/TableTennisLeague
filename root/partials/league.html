@@ -90,8 +90,13 @@
                         <h2>Round {{round_number}}</h2>
                         <hr class="star-primary">
                         <div class="row">
+                            <span class="col-lg-4"><strong>Starts:</strong> {{round.start_date}}</span>
+                            <span class="col-lg-4"><strong>Ends:</strong> {{round.end_date}}</span>
+                        </div>
+                        <div class="row">
+                            <hr />
                             <table class="table">
-                                <tr ng-repeat="player in round">
+                                <tr ng-repeat="player in round.games">
                                     <td class="col-lg-4">{{player.player1}}</td>
                                     <td class="col-lg-1">{{(player.score1) ? player.score1 : 0}}</td>
                                     <td class="col-lg-2">V</td>
