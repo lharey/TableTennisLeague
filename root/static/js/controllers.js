@@ -31,20 +31,41 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
 
     $scope.updateRoundDates = function(round_num, type, data) {
         console.log('updateRoundDates',round_num,type,data);
-        var params = (type == 'start') ? { start_date: data } : { end_date: data };
+        var re = /^\d{4}-\d{2}-\d{2}$/;
+        if (!data.match(re)) {
+            return "Format YYYY-MM-DD";
+        }
+        else {
+            var params = (type == 'start') ? { start_date: data } : { end_date: data };
 
-        $http.put('/tabletennis/schedule/' + round_num, params).success(function(data) {
-            console.log('success',data);
-            $scope.setData(data);
-        });
+            $http.put('/tabletennis/schedule/' + round_num, params).success(function(data) {
+                $scope.setData(data);
+            });
+        }
     }
 
-    $scope.updateScore = function(id, params) {
-        console.log('updateScore',id,params);
-
-        $http.put('/tabletennis/game/' + id, params).success(function(data) {
-            console.log('success',data);
-            $scope.setData(data);
-        });
+    $scope.updateScore = function(id,params) {
+        var score = (params.score1) ? params.score1 : params.score2;
+        var valid = (score <=3 ) ? 1 : 0;
+        for (var i=0; i < $scope.round.games.length; i++) {  
+            var round = $scope.round.games[i];
+            if (round.id == id) {
+                var opponent_score = (params.score1) ? round.score2 : round.score1;
+                var total = score + opponent_score;
+                if (total > 3) {
+                    valid = 0;
+                    break;
+                }
+            }
+        }
+        
+        if (valid) {
+            $http.put('/tabletennis/game/' + id, params).success(function(data) {
+                $scope.setData(data);
+            });
+        }
+        else {
+            return "Match should only be 3 games in total";
+        }
     }
 });
