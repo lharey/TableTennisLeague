@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="row">
-            <table class="table">
+            <table class="table table-striped table-bordered table-condensed">
                 <thead>
                     <th class="col-lg-4">&nbsp;</th>
                     <th class="col-lg-1">
@@ -17,10 +17,10 @@
                         W
                     </th>
                     <th class="col-lg-1">
-                        D
+                        L
                     </th>
                     <th class="col-lg-1">
-                        L
+                        D
                     </th>
                     <th class="col-lg-1">
                         F
@@ -40,8 +40,8 @@
                         <td class="col-lg-4"><strong>{{player.name}}</strong></td>
                         <td class="col-lg-1">{{player.played}}</td>
                         <td class="col-lg-1">{{player.won}}</td>
-                        <td class="col-lg-1">{{player.drawn}}</td>
                         <td class="col-lg-1">{{player.lost}}</td>
+                        <td class="col-lg-1">{{player.drawn}}</td>
                         <td class="col-lg-1">{{player.for}}</td>
                         <td class="col-lg-1">{{player.against}}</td>
                         <td class="col-lg-1">{{player.points_diff}}</td>
@@ -90,18 +90,36 @@
                         <h2>Round {{round_number}}</h2>
                         <hr class="star-primary">
                         <div class="row">
-                            <span class="col-lg-4"><strong>Starts:</strong> {{round.start_date}}</span>
-                            <span class="col-lg-4"><strong>Ends:</strong> {{round.end_date}}</span>
+                            <div class="col-lg-2"><strong>Starts:</strong></div>
+                            <div class="col-lg-3">
+                                <a href="#" editable-text="round.start_date" e-style="width: 100px" onbeforesave="updateRoundDates(round_number,'start',$data)">
+                                    {{round.start_date || "empty" }}
+                                </a>
+                            </div>
+                            <div class="col-lg-2"><strong>Ends:</strong></div>
+                            <div class="col-lg-3">
+                                <a href="#" editable-text="round.end_date" e-style="width: 100px" onbeforesave="updateRoundDates(round_number,'end',$data)">
+                                    {{round.end_date || "empty" }}
+                                </a>
+                            </div>
                         </div>
                         <div class="row">
                             <hr />
                             <table class="table">
-                                <tr ng-repeat="player in round.games">
-                                    <td class="col-lg-4">{{player.player1}}</td>
-                                    <td class="col-lg-1">{{(player.score1) ? player.score1 : 0}}</td>
+                                <tr ng-repeat="game in round.games">
+                                    <td class="col-lg-4">{{game.player1}}</td>
+                                    <td class="col-lg-1">
+                                        <a href="#" editable-number="game.score1" e-style="width: 60px" onbeforesave="updateScore(game.id,{player1: game.player1, score1: $data})">
+                                            {{(game.score1) ? game.score1 : 0}}
+                                        </a>
+                                    </td>
                                     <td class="col-lg-2">V</td>
-                                    <td class="col-lg-1">{{(player.score2) ? player.score2 : 0}}</td>
-                                    <td class="col-lg-4">{{player.player2}}</td>
+                                    <td class="col-lg-1">
+                                        <a href="#" editable-number="game.score2" e-style="width: 60px" onbeforesave="updateScore(game.id,{player2: game.player1, score2: $data})">
+                                            {{(game.score2) ? game.score2 : 0}}
+                                        </a>
+                                    </td>
+                                    <td class="col-lg-4">{{game.player2}}</td>
                                 </tr>
                             </table>
                         </div>
