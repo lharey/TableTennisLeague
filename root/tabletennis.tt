@@ -103,7 +103,7 @@
                     <ul>
                         <li>Each round will usually be a week in length</li>
                         <li>Games can be delayed for valid reasons e.g. holiday, injury etc</li>
-                        <li>Uncompleted games will be scored a draw</li>
+                        <li>Uncompleted games will be a draw (but will be 0 points)</li>
                     </ul>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
