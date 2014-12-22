@@ -55,7 +55,17 @@ sub league_GET {
             played => $_->played,
             score => $_->score
         }
-    } $c->model('DB::League')->search()->all();
+    } $c->model('DB::League')->search(
+        {},
+        {
+            order_by => [
+                {-desc => 'score'},
+                {-desc => 'points_diff'},
+                {-desc => 'played'},
+                {-asc => 'player'}
+            ]
+        }
+    )->all();
 
     my %rounds;
     foreach my $game ($c->model('DB::Round')->search()->all()) {
