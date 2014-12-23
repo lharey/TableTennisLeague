@@ -21,6 +21,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
             $scope.roundButtons.push(i);
         }
         $scope.current_round = data.current_round;
+        $scope.admin_user = data.admin_user;
     }
 
     $scope.showRound = function(number) {
@@ -32,7 +33,11 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     $scope.updateRoundDates = function(round_num, type, data) {
         console.log('updateRoundDates',round_num,type,data);
         var re = /^\d{4}-\d{2}-\d{2}$/;
-        if (!data.match(re)) {
+
+        if (!$scope.admin_user) {
+            return 'Only admin users can amend the dates';
+        }
+        else if (!data.match(re)) {
             return "Format YYYY-MM-DD";
         }
         else {
@@ -47,7 +52,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     $scope.updateScore = function(id,params) {
         var score = (params.score1) ? params.score1 : params.score2;
         var valid = (score <=3 ) ? 1 : 0;
-        for (var i=0; i < $scope.round.games.length; i++) {  
+        for (var i=0; i < $scope.round.games.length; i++) {
             var round = $scope.round.games[i];
             if (round.id == id) {
                 var opponent_score = (params.score1) ? round.score2 : round.score1;
@@ -58,7 +63,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
                 }
             }
         }
-        
+
         if (valid) {
             $http.put('/tabletennis/game/' + id, params).success(function(data) {
                 $scope.setData(data);
