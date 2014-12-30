@@ -83,30 +83,54 @@
                 <hr class="star-primary">
             </div>
         </div>
-        <div class="row">
-            <div class="text-center">
-                <ul class="list-unstyled">
-                    <li>Matches are 3 games long</li>
-                    <li>All 3 games should be played</li>
-                    <li>3 points for a win</li>
-                    <li>0 points for a loss</li>
-                    <li>Each round will usually be a week in length</li>
-                    <li>Games can be delayed for valid reasons e.g. holiday, injury etc</li>
-                    <li>Uncompleted games will be a draw (but will be 0 points)</li>
-                </ul>
-            </div>
+        <div class="row text-center">
+            <ul class="list-unstyled">
+                <li><strong>General:</strong></li>
+                <li>Matches are 3 games long, all 3 games should be played.</li>
+                <li>Games are played first to 11 points, but games must be won by 2 clear points.</li>
+                <li>3 points for a win, 0 points for a loss.</li>
+                <li>Each round will usually be a week in length.</li>
+                <li>Games can be delayed for valid reasons e.g. holiday, injury etc.</li>
+                <li>Uncompleted games will be a draw (but will be 0 points).</li>
+            </ul>
         </div>
         <div class="row">
             <hr />
         </div>
+        <div class="row text-center">
+            <ul class="list-unstyled">
+                <li><strong>Serving:</strong></li>
+                <li>Alternates every 2 points. If both players reach 10 points service will then alternate after each point.</li>
+                <li>Must bounce once on the servers side, followed by the receivers side, without touching anything else.</li>
+                <li>An otherwise legal serve that touches the net is retaken, without any points gained or lost.</li>
+            </ul>
+        </div>
         <div class="row">
-            <div class="text-center">
-                <ul class="list-unstyled">
-                    <li>The winner should entire the score for their game in the <a href="#rounds" ng-click="pageScroll($event); $event.preventDefault()">Rounds</a> section</li>
-                    <li>Entering a score will automatically update the <a href="#league" ng-click="pageScroll($event); $event.preventDefault()">League</a> (Once entered it cannot be changed)</li>
-                    <li>Any problems contact <a href="mailto:{{admin_email}}">{{admin_email}}</a></li>
-                </ul>
-            </div>
+            <hr />
+        </div>
+        <div class="row text-center">
+            <ul class="list-unstyled">
+                <li><strong>Points are scored in the event that:</strong></li>
+                <li>Opponent fails to make a correct service or return</li>
+                <li>After making a service or a return, the ball touches anything other than the net assembly or table before being struck by the opponent.</li>
+                <li>The ball passes over the player's court or beyond his end line without touching his court, after being struck by the opponent.</li>
+                <li>The opponent obstructs the ball.</li>
+                <li>The opponent strikes the ball twice successively.</li>
+                <li>The opponent strikes the ball with a side of the racket blade whose surface is not covered with rubber.</li>
+                <li>The opponent moves the playing surface or touches the net assembly.</li>
+                <li>The opponent's free hand touches the playing surface.</li>
+            </ul>
+        </div>
+        <div class="row">
+            <hr />
+        </div>
+        <div class="row text-center">
+            <ul class="list-unstyled">
+                <li><strong>Completing your game score:</strong></li>
+                <li>The winner should entire the score for their game in the <a href="#rounds" ng-click="pageScroll($event); $event.preventDefault()">Rounds</a> section.</li>
+                <li>Entering a score will automatically update the <a href="#league" ng-click="pageScroll($event); $event.preventDefault()">League</a> (Once entered it cannot be changed).</li>
+                <li>Any problems contact <a href="mailto:{{admin_email}}">{{admin_email}}</a>.</li>
+            </ul>
         </div>
     </div>
 </section>
