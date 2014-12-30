@@ -102,8 +102,8 @@
         <div class="row">
             <div class="text-center">
                 <ul class="list-unstyled">
-                    <li>The winner should entire the score for their game in the <a href="#rounds">Rounds</a> section</li>
-                    <li>Entering a score will automatically update the <a href="#league">League</a> (Once entered it cannot be changed)</li>
+                    <li>The winner should entire the score for their game in the <a href="#rounds" ng-click="pageScroll($event); $event.preventDefault()">Rounds</a> section</li>
+                    <li>Entering a score will automatically update the <a href="#league" ng-click="pageScroll($event); $event.preventDefault()">League</a> (Once entered it cannot be changed)</li>
                     <li>Any problems contact <a href="mailto:{{admin_email}}">{{admin_email}}</a></li>
                 </ul>
             </div>

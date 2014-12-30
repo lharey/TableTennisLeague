@@ -37,6 +37,14 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
         }
     }
 
+    $scope.pageScroll = function(event) {
+        console.log('pageScroll',event);
+        var $anchor = $(event.currentTarget);
+        $('html, body').stop().animate({
+            scrollTop: $($anchor.attr('href')).offset().top
+        }, 1500, 'easeInOutExpo');
+    }
+
     $scope.updateRoundDates = function(round_num, type, data) {
         console.log('updateRoundDates',round_num,type,data);
         var re = /^\d{4}-\d{2}-\d{2}$/;
