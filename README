@@ -1,1 +1,4 @@
 Run script/tabletennisleague_server.pl to test the application.
+
+To update DB Schema:
+perl script/tabletennisleague_create.pl model DB DBIC::Schema Schema \ create=static dbi:SQLite:table_tennis.db

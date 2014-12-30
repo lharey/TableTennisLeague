@@ -7,6 +7,8 @@ use DDP;
 
 BEGIN { extends 'Catalyst::Controller::REST'; }
 
+with 'TableTennisLeague::Role::AuditLog';
+
 =head1 NAME
 
 TableTennisLeague::Controller::Tabletennis - Catalyst Controller
@@ -141,6 +143,7 @@ sub schedule_PUT {
         );
     }
     else {
+        $self->audit($c);
         $self->league_GET($c);
     }
 }
@@ -219,6 +222,7 @@ sub game_PUT {
                 );
             }
             else {
+                $self->audit($c);
                 $self->league_GET($c);
             }
         }

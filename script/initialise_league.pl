@@ -49,9 +49,14 @@ my $dbh = DBI->connect($dsn, '', '', { RaiseError => 1 })
                       or die $DBI::errstr;
 
 my $sql = qq (
-    DROP TABLE main.schedule;
+    DROP TABLE main.audit_log;
 );
 my $res = eval { $dbh->do($sql); };
+
+$sql = qq (
+    DROP TABLE main.schedule;
+);
+$res = eval { $dbh->do($sql); };
 
 $sql = qq (
     DROP TABLE main.rounds;
@@ -91,8 +96,8 @@ $sql = qq (
         round INT NOT NULL,
         player1 TEXT NOT NULL,
         player2 TEXT NOT NULL,
-        score1 INT,
-        score2 INT,
+        score1 INT DEFAULT 0,
+        score2 INT DEFAULT 0,
         FOREIGN KEY(player1)
             REFERENCES league(player)
         FOREIGN KEY(player2)
@@ -121,6 +126,23 @@ if($res < 0){
    print $DBI::errstr;
 } else {
    print "schedule table created\n";
+}
+
+$sql = qq (
+    CREATE TABLE main.audit_log(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT,
+        audit_date TEXT,
+        action TEXT,
+        path TEXT,
+        content TEXT
+    );
+);
+$res = $dbh->do($sql);
+if($res < 0){
+   print $DBI::errstr;
+} else {
+   print "audit_log table created\n";
 }
 
 my @league_table;
