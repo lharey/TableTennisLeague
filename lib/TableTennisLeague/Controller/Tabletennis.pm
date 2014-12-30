@@ -88,9 +88,7 @@ sub league_GET {
             player2 => $game->player2->player,
             score1 => $game->score1,
             score2 => $game->score2,
-            winner => ($score1 > $score2) ? $game->player1->player
-                      : ($score2 > $score1) ? $game->player2->player
-                      : undef
+            winner => $game->winner
         };
     }
 
@@ -107,7 +105,8 @@ sub league_GET {
             rounds => \%rounds,
             round_total => scalar keys %rounds,
             current_round => ($current_round) ? $current_round->round : 1,
-            admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0
+            admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0,
+            admin_email => $c->config->{admin_email}
         }
     );
 }
@@ -159,7 +158,7 @@ sub game_PUT {
 
     my $game = $c->model('DB::Round')->find({id => $id});
 
-    if ($game) {
+    if ($game && !$game->winner) {
         my $params;
         if ($data->{player1}) {
             $params->{score1} = $data->{score1};
@@ -168,75 +167,92 @@ sub game_PUT {
             $params->{score2} = $data->{score2};
         }
 
-        eval {$game->update($params); };
+        my $success = eval {
+            $c->model('DB')->txn_do(
+                sub {
+
+                    $game->update($params);
+
+                    # Now if the game is complete, update the league table
+                    if (!$game->winner && ($game->score1 + $game->score2) == 3) {
+                        my $player1 = $game->player1;
+
+                        my $params1 = {
+                            for => $player1->for + $game->score1,
+                            against => $player1->against + $game->score2,
+                            played => $player1->played + 1
+                        };
+
+                        my $player2 = $game->player2;
+
+                        my $params2 = {
+                            for => $player2->for + $game->score2,
+                            against => $player2->against + $game->score1,
+                            played => $player1->played + 1
+                        };
+
+                        if ($game->score1 > $game->score2) {
+                            $params1->{won} = $player1->won + 1;
+                            $params1->{score} = $player1->score + 3;
+                            $params2->{lost} = $player2->lost + 1;
+                        }
+                        elsif ($game->score2 > $game->score1) {
+                            $params2->{won} = $player2->won + 1;
+                            $params2->{score} = $player2->score + 3;
+                            $params1->{lost} = $player1->lost + 1;
+                        }
+
+                        $params1->{points_diff} = $params1->{for} - $params1->{against};
+                        $params2->{points_diff} = $params2->{for} - $params2->{against};
+
+                        my $winner = ($game->score1 > $game->score2) ? $player1->player
+                                                                     : ($game->score2 > $game->score1 )
+                                                                     ? $player2->player
+                                                                     : 'draw';
+
+                        $player1->update($params1);
+                        $player2->update($params2);
+                        $game->update({winner => $winner});
+
+                        $c->stash->{email} = {
+                            to      => $c->config->{admin_email},
+                            from    => $c->config->{email_from},
+                            subject => 'TableTennis League Score Update Round ' . $game->round,
+                            body    => sprintf("Round %d\n\n%s %d V %d %s",
+                                            $game->round,
+                                            $game->player1->player,
+                                            $game->score1,
+                                            $game->score2,
+                                            $game->player2->player)
+                        };
+
+                        eval {$c->forward( $c->view('Email') ); };
+                    }
+
+                    return 1;
+                }
+            );
+        };
 
         if ($@) {
             $self->status_bad_request(
-                $c,
-                message => "Error $@!"
+               $c,
+               message => "Error $@!"
             );
         }
         else {
-            # Now if the game is complete, update the league table
-            if (($game->score1 + $game->score2) == 3) {
-                my $player1 = $game->player1;
+            $self->audit($c);
 
-                my $params1 = {
-                    for => $player1->for + $game->score1,
-                    against => $player1->against + $game->score2,
-                    played => $player1->played + 1
-                };
-
-                my $player2 = $game->player2;
-
-                my $params2 = {
-                    for => $player2->for + $game->score2,
-                    against => $player2->against + $game->score1,
-                    played => $player1->played + 1
-                };
-
-                if ($game->score1 > $game->score2) {
-                    $params1->{won} = $player1->won + 1;
-                    $params1->{score} = $player1->score + 3;
-                    $params2->{lost} = $player2->lost + 1;
-                }
-                elsif ($game->score2 > $game->score1) {
-                    $params2->{won} = $player2->won + 1;
-                    $params2->{score} = $player2->score + 3;
-                    $params1->{lost} = $player1->lost + 1;
-                }
-
-                $params1->{points_diff} = $params1->{for} - $params1->{against};
-                $params2->{points_diff} = $params2->{for} - $params2->{against};
-
-                eval {
-                    $player1->update($params1);
-                    $player2->update($params2);
-                };
-            }
-
-            if ($@) {
-                $self->status_bad_request(
-                   $c,
-                   message => "Error $@!"
-                );
-            }
-            else {
-                $self->audit($c);
-                $self->league_GET($c);
-            }
+            $self->league_GET($c);
         }
     }
     else {
         $self->status_not_found(
            $c,
-           message => "Game with id $id does not exist!",
+           message => ($game->winner) ? "Unable to update. Game already has a winner"
+                                      : "Game with id $id does not exist!",
         );
     }
-
-
-
-
 }
 
 =encoding utf8

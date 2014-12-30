@@ -22,6 +22,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
         }
         $scope.current_round = data.current_round;
         $scope.admin_user = data.admin_user;
+        $scope.admin_email = data.admin_email;
     }
 
     $scope.showRound = function(number) {
@@ -71,9 +72,19 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
         }
 
         if (valid) {
-            $http.put('/tabletennis/game/' + id, params).success(function(data) {
-                $scope.setData(data);
-            });
+            return $http.put('/tabletennis/game/' + id, params).
+                success(function(data) {
+                    $scope.setData(data);
+                    return 1;
+                }).
+                error(function(data,status,headers) {
+                    console.log('error',data,data.error,status,headers);
+                    return data.error;
+                });
+
+            //if (error) {
+            //    return error;
+            //}
         }
         else {
             return "Match should only be 3 games in total";

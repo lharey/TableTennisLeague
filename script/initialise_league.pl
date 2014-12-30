@@ -98,6 +98,7 @@ $sql = qq (
         player2 TEXT NOT NULL,
         score1 INT DEFAULT 0,
         score2 INT DEFAULT 0,
+        winner TEXT,
         FOREIGN KEY(player1)
             REFERENCES league(player)
         FOREIGN KEY(player2)
