@@ -7,45 +7,45 @@
             </div>
         </div>
         <div class="row">
-            <table class="table table-striped table-bordered table-condensed">
+            <table class="table table-striped table-hover table-condensed">
                 <thead>
-                    <th class="col-lg-4">&nbsp;</th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-3">&nbsp;</th>
+                    <th class="col-lg-1 text-center">
                         P
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         W
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         L
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         D
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         F
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         A
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         PD
                     </th>
-                    <th class="col-lg-1">
+                    <th class="col-lg-1 text-center">
                         Score
                     </th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="player in league">
-                        <td class="col-lg-4"><strong>{{player.name}}</strong></td>
-                        <td class="col-lg-1">{{player.played}}</td>
-                        <td class="col-lg-1">{{player.won}}</td>
-                        <td class="col-lg-1">{{player.lost}}</td>
-                        <td class="col-lg-1">{{player.drawn}}</td>
-                        <td class="col-lg-1">{{player.for}}</td>
-                        <td class="col-lg-1">{{player.against}}</td>
-                        <td class="col-lg-1">{{player.points_diff}}</td>
-                        <td class="col-lg-1"><strong>{{player.score}}</strong></td>
+                    <tr ng-repeat="player in league" class="{{($first) ? 'danger' : ($index < 3) ? 'warning' : '' }}">
+                        <td class="col-lg-3"><strong>{{player.name}}</strong></td>
+                        <td class="col-lg-1 text-center">{{player.played}}</td>
+                        <td class="col-lg-1 text-center">{{player.won}}</td>
+                        <td class="col-lg-1 text-center">{{player.lost}}</td>
+                        <td class="col-lg-1 text-center">{{player.drawn}}</td>
+                        <td class="col-lg-1 text-center">{{player.for}}</td>
+                        <td class="col-lg-1 text-center">{{player.against}}</td>
+                        <td class="col-lg-1 text-center">{{player.points_diff}}</td>
+                        <td class="col-lg-1 text-center"><strong>{{player.score}}</strong></td>
                     </tr>
                 </tbody>
             </table>
