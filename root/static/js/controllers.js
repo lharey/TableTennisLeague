@@ -6,14 +6,11 @@ var tabletennisControllers = angular.module('tabletennisControllers', []);
 
 tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     $http.get('/tabletennis/league').success(function(data) {
-        console.log('data',data);
         $scope.setData(data);
     });
 
     $scope.setData = function(data) {
-        console.log('data',data);
         $scope.league = data.league_table;
-        console.log($scope.league);
         $scope.round_total = data.round_total;
         $scope.rounds = data.rounds;
         $scope.roundButtons = [];
@@ -38,7 +35,6 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     }
 
     $scope.pageScroll = function(event) {
-        console.log('pageScroll',event);
         var $anchor = $(event.currentTarget);
         $('html, body').stop().animate({
             scrollTop: $($anchor.attr('href')).offset().top
@@ -46,7 +42,6 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     }
 
     $scope.updateRoundDates = function(round_num, type, data) {
-        console.log('updateRoundDates',round_num,type,data);
         var re = /^\d{4}-\d{2}-\d{2}$/;
 
         if (!$scope.admin_user) {
