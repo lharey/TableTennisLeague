@@ -78,16 +78,13 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
             return $http.put('/tabletennis/game/' + id, params).
                 success(function(data) {
                     $scope.setData(data);
+                    $scope.showRound($scope.round_number);
                     return 1;
                 }).
                 error(function(data,status,headers) {
                     console.log('error',data,data.error,status,headers);
                     return data.error;
                 });
-
-            //if (error) {
-            //    return error;
-            //}
         }
         else {
             return "Match should only be 3 games in total";
