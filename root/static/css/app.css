@@ -14,3 +14,12 @@ section.rounds div.caption-content h1.current {
 section.rounds div.caption-content h1.future {
     color: #d3d3d3;
 }
+
+div.modal-body hr:not(.star-primary) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.modal-body p {
+    margin-bottom: 0px;
+}
