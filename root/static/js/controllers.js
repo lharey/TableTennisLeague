@@ -28,7 +28,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     $scope.showRound = function(number) {
         $scope.round = $scope.rounds[number];
         var start = $scope.round.start_date;
-        if (!$scope.admin_user && number != $scope.current_round && start && moment(start).isAfter(moment().add(7))) {
+        if (!$scope.admin_user && number != $scope.current_round && start == null) {
             return;
         }
         else {

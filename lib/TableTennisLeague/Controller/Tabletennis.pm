@@ -3,8 +3,6 @@ use Moose;
 use namespace::autoclean;
 use DateTime;
 
-use DDP;
-
 BEGIN { extends 'Catalyst::Controller::REST'; }
 
 with 'TableTennisLeague::Role::AuditLog';
@@ -93,9 +91,10 @@ sub league_GET {
     }
 
     my $today = DateTime->today()->ymd('-');
+
     my $current_round = $c->model('DB::Schedule')->search({
-        start_date =>  { '>=' => $today },
-        end_date => { '<=' => $today }
+        start_date =>  { '<=' => $today },
+        end_date => { '>=' => $today }
     })->first();
 
     $self->status_ok(
@@ -104,7 +103,7 @@ sub league_GET {
             league_table => \@league_table,
             rounds => \%rounds,
             round_total => scalar keys %rounds,
-            current_round => ($current_round) ? $current_round->round : 1,
+            current_round => ($current_round) ? $current_round->round->round : 1,
             admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0,
             admin_email => $c->config->{admin_email}
         }

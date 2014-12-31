@@ -1,4 +1,14 @@
-Run script/tabletennisleague_server.pl to test the application.
+Setup:
 
-To update DB Schema:
+Copy tabletennisleague.conf.example to tabletennisleague.conf and update
+
+To initialise a new league:
+- Update root/static/players.yml
+- Run script/initialise_league.pl
+
+To Start Application:
+plackup -Ilib tabletennisleague.psgi
+
+Notes:
+Any changes to the schema run:
 perl script/tabletennisleague_create.pl model DB DBIC::Schema Schema \ create=static dbi:SQLite:table_tennis.db

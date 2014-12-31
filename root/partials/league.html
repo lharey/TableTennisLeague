@@ -36,7 +36,7 @@
                     </th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="player in league" class="{{($first) ? 'danger' : ($index < 3) ? 'warning' : '' }}">
+                    <tr ng-repeat="player in league" class="{{($first && player.played > 0) ? 'danger' : ($index < 3 && player.played > 0) ? 'warning' : '' }}">
                         <td class="col-lg-3"><strong>{{player.name}}</strong></td>
                         <td class="col-lg-1 text-center">{{player.played}}</td>
                         <td class="col-lg-1 text-center">{{player.won}}</td>
@@ -150,15 +150,15 @@
                         <h2>Round {{round_number}}</h2>
                         <hr class="star-primary">
                         <div class="row">
-                            <div class="col-lg-2"><strong>Starts:</strong></div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3 text-center"><strong>Starts:</strong></div>
+                            <div class="col-lg-3">
                                 <a href="#" ng-show="admin_user" editable-text="round.start_date" e-placeholder="YYYY-MM-DD" e-style="width: 120px" onbeforesave="updateRoundDates(round_number,'start',$data)">
                                     {{round.start_date || "empty" }}
                                 </a>
                                 <span ng-hide="admin_user">{{round.start_date}}</span>
                             </div>
-                            <div class="col-lg-2"><strong>Ends:</strong></div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3 text-center"><strong>Ends:</strong></div>
+                            <div class="col-lg-3">
                                 <a href="#" ng-show="admin_user" editable-text="round.end_date" e-placeholder="YYYY-MM-DD" e-style="width: 120px" onbeforesave="updateRoundDates(round_number,'end',$data)">
                                     {{round.end_date || "empty" }}
                                 </a>
