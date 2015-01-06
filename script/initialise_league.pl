@@ -171,23 +171,22 @@ foreach my $player (sort @{$players}) {
 
 my $rounds;
 my $round_num = 0;
-
 foreach my $round (@{$league->wholeSchedule}) {
     $round_num++;
     my @games;
     foreach my $game (@{$round}) {
         $sql = qq (
-            INSERT INTO main.rounds (round, player1, player2)
-            values (?,?,?);
+            INSERT INTO main.rounds (round, player1, player2, winner)
+            values (?,?,?,?);
         );
-        if ($game->[0] ne 'Bye' && $game->[1] ne 'Bye') {
-            my @bind_vars = ($round_num, $game->[0], $game->[1] );
-            $dbh->do(
-                $sql,
-                undef,
-                @bind_vars
-            ) or die $dbh->errstr;
-        }
+
+        my $winner = ($game->[0] eq 'Bye' || $game->[1] eq 'Bye') ? 'Bye' : undef;
+        my @bind_vars = ($round_num, $game->[0], $game->[1], $winner );
+        $dbh->do(
+            $sql,
+            undef,
+            @bind_vars
+        ) or die $dbh->errstr;
 
         push @games, {
             player1 => $game->[0],
