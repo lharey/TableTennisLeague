@@ -25,13 +25,9 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
     $scope.showRound = function(number) {
         $scope.round = $scope.rounds[number];
         var start = $scope.round.start_date;
-        if (!$scope.admin_user && number != $scope.current_round && start == null) {
-            return;
-        }
-        else {
-            $scope.round_number = number;
-            angular.element('#roundModal').modal('show');
-        }
+
+        $scope.round_number = number;
+        angular.element('#roundModal').modal('show');
     }
 
     $scope.pageScroll = function(event) {
