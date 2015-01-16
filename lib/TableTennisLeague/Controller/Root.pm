@@ -28,12 +28,12 @@ The root page (/)
 
 =cut
 
-#sub index :Path :Args(0) {
-#    my ( $self, $c ) = @_;
-#
-#    # Hello World
-#    $c->detach('tabletennis');
-#}
+sub index :Path :Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{template} = 'tabletennis.tt';
+    $c->forward( $c->view('TT') );
+}
 
 =head2 default
 

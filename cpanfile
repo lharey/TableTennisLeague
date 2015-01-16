@@ -13,3 +13,4 @@ requires 'YAML::XS',                              '>=0';
 requires 'Getopt::Long::Descriptive',             '>=0';
 requires 'FindBin',                               '>=0';
 requires 'Plack::Builder',                        '>=0';
+requires 'Plack::Middleware::CrossOrigin',        '>=0';
