@@ -12,3 +12,4 @@ requires 'Games::Tournament::RoundRobin',         '>=0';
 requires 'YAML::XS',                              '>=0';
 requires 'Getopt::Long::Descriptive',             '>=0';
 requires 'FindBin',                               '>=0';
+requires 'Plack::Builder',                        '>=0';

@@ -1,8 +1,19 @@
 use strict;
 use warnings;
 
+use FindBin qw/$RealBin/;
+use lib "$RealBin/lib";
 use TableTennisLeague;
+use Plack::Builder;
 
-my $app = TableTennisLeague->apply_default_middlewares(TableTennisLeague->psgi_app);
-$app;
+builder {
+    enable 'CrossOrigin',
+        origins         => '*',
+        headers         => '*',
+        methods         => '*',
+        expose_headers  => '*';
 
+    my $app = TableTennisLeague->psgi_app;
+
+    $app = TableTennisLeague->apply_default_middlewares($app);
+}
