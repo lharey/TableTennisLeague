@@ -187,7 +187,7 @@ sub game_PUT {
                         my $params2 = {
                             for => $player2->for + $game->score2,
                             against => $player2->against + $game->score1,
-                            played => $player1->played + 1
+                            played => $player2->played + 1
                         };
 
                         if ($game->score1 > $game->score2) {
