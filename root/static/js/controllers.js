@@ -86,4 +86,14 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
             return "Match should only be 3 games in total";
         }
     }
+
+    $scope.showPlayer = function(name) {
+        $http.get('/tabletennis/player/' + name).success(function(data) {
+           $scope.player = {
+                name: name,
+                games: data
+           };
+           angular.element('#playerModal').modal('show');
+        });
+    }
 });

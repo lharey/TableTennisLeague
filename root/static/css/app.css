@@ -23,3 +23,8 @@ div.modal-body hr:not(.star-primary) {
 div.modal-body p {
     margin-bottom: 0px;
 }
+
+.table-hover tr {
+    cursor: pointer;
+}
+

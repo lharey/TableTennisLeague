@@ -1,0 +1,30 @@
+<div class="portfolio-modal modal fade" id="playerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="modal-body">
+                        <h2>{{player.name}}</h2>
+                        <hr class="star-primary">
+                        <div class="row">
+                            <hr />
+                            <table class="table table-condensed table-striped">
+                                <tr ng-repeat="game in player.games">
+                                    <td class="col-sm-2"><strong>Round {{game.round}}</strong></td>
+                                    <td class="col-sm-2 {{(game.winner == player.name) ? 'text-danger' : ''}}">{{(game.winner != 'Bye') ? game.player_score + ' v ' + game.opponent_score : '' }}</td>
+                                    <td class="col-sm-2">{{game.opponent}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

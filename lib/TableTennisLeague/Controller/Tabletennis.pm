@@ -25,6 +25,8 @@ sub schedule : Local : ActionClass('REST') {}
 
 sub game : Local : ActionClass('REST') {}
 
+sub player : Local : ActionClass('REST') {}
+
 =head2 index
 
 =cut
@@ -252,6 +254,57 @@ sub game_PUT {
                                       : "Game with id $id does not exist!",
         );
     }
+}
+
+=head2 player_GET
+
+=cut
+
+sub player_GET {
+    my ( $self, $c, $name ) = @_;
+
+    my @games;
+    foreach my $game ($c->model('DB::Round')->search(
+        {
+            -or => [
+                player1 => $name,
+                player2 => $name
+            ]
+        },
+        {
+            order_by => 'round'
+        }
+    )) {
+use DDP;
+        my $score;
+        my $opponent;
+        my $opponent_score;
+        if ($game->player1->player eq $name) {
+            $score = $game->score1;
+            $opponent = $game->player2;
+            $opponent_score = $game->score2;
+        }
+        else {
+            $score = $game->score2;
+            $opponent = $game->player1;
+            $opponent_score = $game->score1;
+        }
+
+        push @games, {
+            round => $game->round,
+            opponent => $opponent->player,
+            opponent_score => $opponent_score,
+            player_score => $score,
+            winner => $game->winner
+        };
+    }
+
+p @games;
+    $self->status_ok(
+        $c,
+        entity => \@games
+    );
+
 }
 
 =encoding utf8
