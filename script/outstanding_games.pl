@@ -25,18 +25,26 @@ my $today = DateTime->today()->ymd('-');
 my $current_round = TableTennisLeague->model('DB::Schedule')->search(
     {
         start_date =>  { '<=' => $today },
-        end_date => { '>=' => $today }
+        end_date => { '>=' => $today },
     },
     {
         prefetch => 'round'
     }
 )->first();
 
+my $params =  {
+    winner => undef
+};
+if (!$current_round) {
+    print "Current round not found. Printing outstanding games for all rounds\n";
+}
+else {
+    $params->{round} = { '<' => $current_round->round->round };
+}
+
+
 my @outstanding_games = TableTennisLeague->model('DB::Round')->search(
-    {
-        round => { '<' => $current_round->round->round },
-        winner => undef
-    },
+    $params,
     {
         order_by => 'me.round'
     }
