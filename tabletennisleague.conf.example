@@ -6,6 +6,8 @@ admin_ip "fill me in"
 admin_email "fill me in"
 email_from  "fill me in"
 
+season_number 1
+
 <View::Email>
     <default>
         content_type text/plain

@@ -15,6 +15,14 @@ section.rounds div.caption-content h1.future {
     color: #d3d3d3;
 }
 
+section {
+    padding-bottom: 20px;
+}
+
+section.last {
+    padding-top: 0px;
+}
+
 div.modal-body hr:not(.star-primary) {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -28,3 +36,10 @@ div.modal-body p {
     cursor: pointer;
 }
 
+section#sign-up {
+    min-height: 350px;
+}
+
+section#sign-up div.alert {
+    margin-top: 20px;
+}
