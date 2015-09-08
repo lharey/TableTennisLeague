@@ -58,6 +58,9 @@
                     <li class="page-scroll">
                         <a href="#rules">Rules</a>
                     </li>
+                    <li class="page-scroll">
+                        <a href="#sign-up">Sign-up</a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

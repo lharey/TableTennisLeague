@@ -5,6 +5,8 @@
 var tabletennisControllers = angular.module('tabletennisControllers', []);
 
 tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
+    $('#sign-up div.alert').hide();
+
     $http.get('/tabletennis/league').success(function(data) {
         $scope.setData(data);
     });
@@ -20,6 +22,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
         $scope.current_round = data.current_round;
         $scope.admin_user = data.admin_user;
         $scope.admin_email = data.admin_email;
+        $scope.season_number = parseInt(data.season_number);
     }
 
     $scope.showRound = function(number) {
@@ -95,5 +98,26 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
            };
            angular.element('#playerModal').modal('show');
         });
+    }
+
+    $scope.signUp = function() {
+        $('#sign-up div.alert').hide();
+        var next_season = $scope.season_number + 1;
+        console.log('next_season',next_season);
+        var params = {
+            name: $('#signup_form #name').val(),
+            email: $('#signup_form #email').val()
+        };
+
+        $http.post('/tabletennis/signup/' + next_season, params).
+            success(function() {
+                $('#signup_form')[0].reset();
+                $('#sign-up div.alert-success').show();
+            }).
+            error(function(data,status,headers) {
+                console.log('error',data,data.error,status,headers);
+                $('#sign-up div.alert-danger strong').html(data.error);
+                $('#sign-up div.alert-danger').show();
+            });
     }
 });

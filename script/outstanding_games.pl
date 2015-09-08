@@ -20,12 +20,15 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use TableTennisLeague;
 
+my $season_number = TableTennisLeague->config->{season_number};
+
 my $today = DateTime->today()->ymd('-');
 
 my $current_round = TableTennisLeague->model('DB::Schedule')->search(
     {
         start_date =>  { '<=' => $today },
         end_date => { '>=' => $today },
+        'me.season_number' => $season_number
     },
     {
         prefetch => 'round'
@@ -33,7 +36,8 @@ my $current_round = TableTennisLeague->model('DB::Schedule')->search(
 )->first();
 
 my $params =  {
-    winner => undef
+    winner => undef,
+    'me.season_number' => $season_number
 };
 if (!$current_round) {
     print "Current round not found. Printing outstanding games for all rounds\n";

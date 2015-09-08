@@ -27,6 +27,8 @@ sub game : Local : ActionClass('REST') {}
 
 sub player : Local : ActionClass('REST') {}
 
+sub signup : Local : ActionClass('REST') {}
+
 =head2 index
 
 =cut
@@ -45,6 +47,8 @@ sub index :Path :Args(0) {
 sub league_GET {
     my ( $self, $c ) = @_;
 
+    my $season_number = $c->request->param('season_number') || $c->config->{season_number};
+
     my @league_table = map {
         {
             name => $_->player,
@@ -58,7 +62,9 @@ sub league_GET {
             score => $_->score
         }
     } $c->model('DB::League')->search(
-        {},
+        {
+            season_number => $season_number
+        },
         {
             order_by => [
                 {-desc => 'score'},
@@ -70,9 +76,13 @@ sub league_GET {
     )->all();
 
     my %rounds;
-    foreach my $game ($c->model('DB::Round')->search()->all()) {
+    foreach my $game ($c->model('DB::Round')->search({
+        season_number => $season_number
+    })->all()) {
         if (!$rounds{$game->round}) {
-            my $schedule = $game->schedules->first();
+            my $schedule = $game->search_related('schedules',{
+                season_number => $season_number
+            })->first();
             $rounds{$game->round} = {
                 games => [],
                 start_date => $schedule->start_date,
@@ -96,7 +106,8 @@ sub league_GET {
 
     my $current_round = $c->model('DB::Schedule')->search({
         start_date =>  { '<=' => $today },
-        end_date => { '>=' => $today }
+        end_date => { '>=' => $today },
+        season_number => $season_number
     })->first();
 
     $self->status_ok(
@@ -107,7 +118,8 @@ sub league_GET {
             round_total => scalar keys %rounds,
             current_round => ($current_round) ? $current_round->round->round : 1,
             admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0,
-            admin_email => $c->config->{admin_email}
+            admin_email => $c->config->{admin_email},
+            season_number => $season_number
         }
     );
 }
@@ -121,6 +133,8 @@ sub schedule_PUT {
 
     my $data = $c->req->data;
 
+    my $season_number = $data->{season_number} || $c->config->{season_number};
+
     my $params;
     if ($data->{start_date}) {
         $params->{start_date} = $data->{start_date};
@@ -130,9 +144,10 @@ sub schedule_PUT {
         $params->{end_date} = $data->{end_date};
     }
 
-    my $round = $c->model('DB::Schedule')->find({
-        round => $round_number
-    });
+    my $round = $c->model('DB::Schedule')->search({
+        round => $round_number,
+        season_number => $season_number
+    })->first();
 
     eval { $round->update($params); };
 
@@ -157,6 +172,8 @@ sub game_PUT {
 
     my $data = $c->req->data;
 
+    my $season_number = $data->{season_number} || $c->config->{season_number};
+
     my $game = $c->model('DB::Round')->find({id => $id});
 
     if ($game && !$game->winner) {
@@ -171,12 +188,14 @@ sub game_PUT {
         my $success = eval {
             $c->model('DB')->txn_do(
                 sub {
-
                     $game->update($params);
 
                     # Now if the game is complete, update the league table
                     if (!$game->winner && ($game->score1 + $game->score2) == 3) {
-                        my $player1 = $game->player1;
+                        my $player1 = $c->model('DB::League')->search({
+                            player => $game->player1->player,
+                            season_number => $season_number
+                        })->first();
 
                         my $params1 = {
                             for => $player1->for + $game->score1,
@@ -184,7 +203,10 @@ sub game_PUT {
                             played => $player1->played + 1
                         };
 
-                        my $player2 = $game->player2;
+                        my $player2 = $c->model('DB::League')->search({
+                            player => $game->player2->player,
+                            season_number => $season_number
+                        })->first();
 
                         my $params2 = {
                             for => $player2->for + $game->score2,
@@ -263,19 +285,21 @@ sub game_PUT {
 sub player_GET {
     my ( $self, $c, $name ) = @_;
 
+    my $season_number = $c->request->param('season_number') || $c->config->{season_number};
+
     my @games;
     foreach my $game ($c->model('DB::Round')->search(
         {
             -or => [
                 player1 => $name,
                 player2 => $name
-            ]
+            ],
+            season_number => $season_number
         },
         {
             order_by => 'round'
         }
     )) {
-use DDP;
         my $score;
         my $opponent;
         my $opponent_score;
@@ -299,12 +323,63 @@ use DDP;
         };
     }
 
-p @games;
     $self->status_ok(
         $c,
         entity => \@games
     );
 
+}
+
+=head2 signup_POST
+
+=cut
+
+sub signup_POST {
+    my ( $self, $c, $season_number ) = @_;
+
+    my $data = $c->req->data;
+
+    if (!$data->{name} || !$data->{email}) {
+        $self->status_bad_request(
+           $c,
+           message => "Must supply name and email"
+        );
+    }
+    else {
+        my $signup = $c->model('DB::Signup')->find({
+            season_number => $season_number,
+            email => $data->{email}
+        });
+
+        if ($signup) {
+            $self->status_bad_request(
+               $c,
+               message => "You have already signed up for Season $season_number"
+            );
+        }
+        else {
+            my $signup = eval {
+                $c->model('DB::Signup')->create({
+                    player => $data->{name},
+                    season_number => $season_number,
+                    email => $data->{email}
+                });
+            };
+
+            if ($@) {
+                $self->status_bad_request(
+                   $c,
+                   message => "Error $@!"
+                );
+            }
+            else {
+                $self->status_ok(
+                    $c,
+                    entity => []
+                );
+            }
+        }
+    }
 }
 
 =encoding utf8
