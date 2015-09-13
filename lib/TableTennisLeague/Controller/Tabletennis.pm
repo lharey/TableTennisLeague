@@ -116,7 +116,7 @@ sub league_GET {
             league_table => \@league_table,
             rounds => \%rounds,
             round_total => scalar keys %rounds,
-            current_round => ($current_round) ? $current_round->round->round : 1,
+            current_round => ($current_round) ? $current_round->round->round : undef,
             admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0,
             admin_email => $c->config->{admin_email},
             season_number => $season_number
