@@ -29,6 +29,8 @@ sub player : Local : ActionClass('REST') {}
 
 sub signup : Local : ActionClass('REST') {}
 
+sub history : Local : ActionClass('REST') {}
+
 =head2 index
 
 =cut
@@ -110,6 +112,26 @@ sub league_GET {
         season_number => $season_number
     })->first();
 
+    # The previous season winners
+    my @history;
+    my $last_season = $season_number -1;
+    if ($last_season) {
+        foreach my $num (1..$last_season) {
+            my $row = $c->model('DB::League')->search(
+                {
+                    season_number => $num
+                },
+                {
+                    order_by => { '-desc' => 'score' }
+                }
+            )->first();
+            push @history, {
+                number => $num,
+                winner => $row->player
+            };
+        }
+    }
+
     $self->status_ok(
         $c,
         entity => {
@@ -119,7 +141,8 @@ sub league_GET {
             current_round => ($current_round) ? $current_round->round->round : undef,
             admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0,
             admin_email => $c->config->{admin_email},
-            season_number => $season_number
+            season_number => $season_number,
+            history => \@history
         }
     );
 }
@@ -379,6 +402,53 @@ sub signup_POST {
                 );
             }
         }
+    }
+}
+
+=head2 history_GET
+
+=cut
+
+sub history_GET {
+    my ( $self, $c, $season_number ) = @_;
+
+    if (!$season_number) {
+        $self->status_bad_request(
+           $c,
+           message => "Must provide season number"
+        );
+    }
+    else {
+        my @league_table = map {
+            {
+                name => $_->player,
+                for => $_->for,
+                against => $_->against,
+                points_diff => $_->points_diff,
+                drawn => $_->drawn,
+                lost => $_->lost,
+                won => $_->won,
+                played => $_->played,
+                score => $_->score
+            }
+        } $c->model('DB::League')->search(
+            {
+                season_number => $season_number
+            },
+            {
+                order_by => [
+                    {-desc => 'score'},
+                    {-desc => 'points_diff'},
+                    {-desc => 'played'},
+                    {-asc => 'player'}
+                ]
+            }
+        )->all();
+
+        $self->status_ok(
+            $c,
+            entity => { league => \@league_table }
+        );
     }
 }
 

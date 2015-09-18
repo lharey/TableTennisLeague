@@ -59,6 +59,9 @@
                         <a href="#rules">Rules</a>
                     </li>
                     <li class="page-scroll">
+                        <a href="#history">History</a>
+                    </li>
+                    <li class="page-scroll">
                         <a href="#sign-up">Sign-up</a>
                     </li>
                 </ul>

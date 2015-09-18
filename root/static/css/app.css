@@ -3,7 +3,8 @@ section.rounds {
     background: #18bc9c;
 }
 
-section.rounds div.caption-content h1 {
+section.rounds div.caption-content h1,
+section.rounds div.caption-content h2{
     color: #fff;
 }
 
@@ -42,4 +43,18 @@ section#sign-up {
 
 section#sign-up div.alert {
     margin-top: 20px;
+}
+
+section#history {
+    min-height: 500px;
+}
+
+section#history h1 {
+    text-transform: none;
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+section#history div.portfolio-item {
+    margin-top: 10px;
 }
