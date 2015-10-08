@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <h2>League</h2>
+                <h2>League - season {{season_number}}</h2>
                 <hr class="star-primary">
             </div>
         </div>
@@ -137,6 +137,28 @@
     </div>
 </section>
 
+<section class="rounds" id="history">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2>League History</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 portfolio-item" ng-repeat="season in history_list">
+                <a href="#historyModal" class="portfolio-link" ng-click="showPreviousSeason(season.number); $event.preventDefault()">
+                    <div class="caption">
+                        <div class="caption-content text-center">
+                            <h1>Season {{season.number}} - {{season.winner}}</h1>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="last" id="sign-up">
     <div class="container">
         <div class="row">
@@ -176,3 +198,5 @@
 <div ng-include="'partials/round.html'"></div>
 
 <div ng-include="'partials/player.html'"></div>
+
+<div ng-include="'partials/history.html'"></div>

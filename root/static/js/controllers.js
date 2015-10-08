@@ -23,6 +23,8 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
         $scope.admin_user = data.admin_user;
         $scope.admin_email = data.admin_email;
         $scope.season_number = parseInt(data.season_number);
+        $scope.history_list = data.history;
+        $scope.history_league = {};
     }
 
     $scope.showRound = function(number) {
@@ -119,5 +121,21 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
                 $('#sign-up div.alert-danger strong').html(data.error);
                 $('#sign-up div.alert-danger').show();
             });
+    }
+
+    $scope.showPreviousSeason = function (number) {
+        console.log('showPreviousSeason',number);
+        if (!$scope.history_league[number]) {
+            $http.get('/tabletennis/history/' + number).success(function(data) {
+                $scope.history_league[number] = data.league;
+                $scope.history_league_season = number;
+                angular.element('#historyModal').modal('show');
+            });
+        }
+        else {
+            $scope.history_league_season = number;
+            angular.element('#historyModal').modal('show');
+        }
+        console.log('$scope.history_league',$scope.history_league);
     }
 });
