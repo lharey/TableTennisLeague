@@ -109,8 +109,8 @@ sub league_GET {
     my $current_round = $c->model('DB::Schedule')->search({
         start_date =>  { '<=' => $today },
         end_date => { '>=' => $today },
-        season_number => $season_number
-    })->first();
+        'me.season_number' => $season_number
+    },{ prefetch => 'round' })->first();
 
     # The previous season winners
     my @history;
