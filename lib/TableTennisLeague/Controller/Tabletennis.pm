@@ -122,7 +122,12 @@ sub league_GET {
                     season_number => $num
                 },
                 {
-                    order_by => { '-desc' => 'score' }
+                    order_by => [
+                        {-desc => 'score'},
+                        {-desc => 'points_diff'},
+                        {-desc => 'played'},
+                        {-asc => 'player'}
+                    ]
                 }
             )->first();
             push @history, {

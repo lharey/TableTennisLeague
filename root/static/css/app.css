@@ -58,3 +58,7 @@ section#history h1 {
 section#history div.portfolio-item {
     margin-top: 10px;
 }
+
+.portfolio-modal .modal-content {
+    padding: 20px;
+}
