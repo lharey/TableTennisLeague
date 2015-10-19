@@ -48,6 +48,7 @@ sub create_new_season {
     my $success = TableTennisLeague->model('DB')->txn_do(
         sub {
             foreach my $player (@players) {
+                $player =~ s/([\w']+)/\u\L$1/g;
                 TableTennisLeague->model('DB::League')->create({
                     player => $player,
                     season_number => $self->season
