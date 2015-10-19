@@ -79,8 +79,8 @@ sub league_GET {
 
     my %rounds;
     foreach my $game ($c->model('DB::Round')->search({
-        season_number => $season_number
-    })->all()) {
+        'me.season_number' => $season_number
+    },{prefetch => ['player1','player2']})->all()) {
         if (!$rounds{$game->round}) {
             my $schedule = $game->search_related('schedules',{
                 season_number => $season_number
