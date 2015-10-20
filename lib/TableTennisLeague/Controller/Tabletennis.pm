@@ -79,7 +79,9 @@ sub league_GET {
 
     my %rounds;
     foreach my $game ($c->model('DB::Round')->search({
-        'me.season_number' => $season_number
+        'me.season_number' => $season_number,
+        'player1.season_number' => $season_number,
+        'player2.season_number' => $season_number
     },{prefetch => ['player1','player2']})->all()) {
         if (!$rounds{$game->round}) {
             my $schedule = $game->search_related('schedules',{
@@ -109,7 +111,8 @@ sub league_GET {
     my $current_round = $c->model('DB::Schedule')->search({
         start_date =>  { '<=' => $today },
         end_date => { '>=' => $today },
-        'me.season_number' => $season_number
+        'me.season_number' => $season_number,
+        'round.season_number' => $season_number
     },{ prefetch => 'round' })->first();
 
     # The previous season winners
