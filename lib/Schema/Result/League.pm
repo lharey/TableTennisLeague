@@ -38,6 +38,12 @@ __PACKAGE__->table("league");
 
 =head1 ACCESSORS
 
+=head2 id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
 =head2 player
 
   data_type: 'text'
@@ -100,6 +106,8 @@ __PACKAGE__->table("league");
 =cut
 
 __PACKAGE__->add_columns(
+  "id",
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "player",
   { data_type => "text", is_nullable => 0 },
   "score",
@@ -126,13 +134,13 @@ __PACKAGE__->add_columns(
 
 =over 4
 
-=item * L</player>
+=item * L</id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("player");
+__PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
@@ -167,8 +175,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-07-28 09:20:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1oMVQVD8cviTnrQbsrEWUw
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-10-22 13:20:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nahonbFI7ZdQ6a5NCi38FQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
