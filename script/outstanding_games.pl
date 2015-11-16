@@ -46,11 +46,13 @@ else {
     $params->{round} = { '<' => $current_round->round->round };
 }
 
-
+$params->{'player1.season_number'} = $season_number;
+$params->{'player2.season_number'} = $season_number;
 my @outstanding_games = TableTennisLeague->model('DB::Round')->search(
     $params,
     {
-        order_by => 'me.round'
+        order_by => 'me.round',
+        prefetch => ['player1','player2']
     }
 )->all();
 
