@@ -24,6 +24,7 @@ tabletennisControllers.controller('LeagueCtrl', function ($scope, $http) {
         $scope.admin_email = data.admin_email;
         $scope.season_number = parseInt(data.season_number);
         $scope.history_list = data.history;
+        $scope.old_seasons = data.old_seasons;
         $scope.history_league = {};
     }
 

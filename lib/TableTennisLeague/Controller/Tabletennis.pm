@@ -150,7 +150,8 @@ sub league_GET {
             admin_user => ($c->config->{admin_ip} eq $c->req->address) ? 1 : 0,
             admin_email => $c->config->{admin_email},
             season_number => $season_number,
-            history => \@history
+            history => \@history,
+            old_seasons => $c->config->{old_seasons}
         }
     );
 }
